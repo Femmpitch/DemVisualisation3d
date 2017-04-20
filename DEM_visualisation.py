@@ -2,6 +2,7 @@
 import gdal, osr
 import numpy as np
 import visvis
+from mayavi import mlab
 # Важно: для работы visvis нужен установленный PyQt4-5 или PySide
 
 def importDemAsArray(path, xsize=None, ysize=None, xoff=0, yoff=0):
@@ -58,12 +59,23 @@ def visualizeDEM_direct(path, scale=1.0):
     X, Y, Z = importDemAsArray(path)
     visualizeDEM(X, Y, Z, scale)
 
+def visualizeDEM_maya(X,Y,Z,scale=1.0):
+    """Создание 3D-модели из вычисленных ранее массивов отрисовка в MayaVI"""
+    mlab.mesh(X,Y,Z*scale)
+
+    mlab.scalarbar(label_fmt='%.1f')
+    mlab.orientation_axes()
+    mlab.axes(nb_labels= 5) # не нашел способ задать label_fmt у axes
+    mlab.show()
+
+
 
 if __name__ == "__main__":
     #1. Пример 1
     path = 'n55_e037_3arc_v1.tif'
     X, Y, Z = importDemAsArray(path)
-    visualizeDEM(X, Y, Z, 20)
+    #visualizeDEM(X, Y, Z, 20)
+    visualizeDEM_maya(Y, X, Z, 20)
 
     #2. Пример 2
     # path = 'srtm_germany_dsm.tif'
